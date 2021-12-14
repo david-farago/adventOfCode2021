@@ -1,4 +1,5 @@
 const {strictEqual} = require("assert");
+
 const example1 = 'start-A,start-b,A-c,A-b,b-d,A-end,b-end';
 const example2 = 'dc-end,HN-start,start-kj,dc-start,dc-HN,LN-dc,HN-end,kj-sa,kj-HN,kj-dc';
 const example3 = 'fs-end,he-DX,fs-he,start-DX,pj-DX,end-zg,zg-sl,zg-pj,pj-he,RW-he,fs-DX,pj-RW,zg-RW,start-pj,he-WI,zg-he,pj-fs,start-RW';
@@ -40,7 +41,7 @@ function partOne(input) {
         })
     }
 
-    lengthenPath(['start'])
+    lengthenPath(['start']);
 
     return paths.length;
 }
@@ -48,4 +49,35 @@ function partOne(input) {
 strictEqual(partOne(example1), 10);
 strictEqual(partOne(example2), 19);
 strictEqual(partOne(example3), 226);
-console.log(partOne(input))
+console.log('partOne', partOne(input));
+
+function partTwo(input) {
+    const graph = parseGraph(input);
+    let paths = [];
+
+    function lengthenPath(pathSoFar) {
+        const lastPathNode = pathSoFar[pathSoFar.length - 1]
+        graph.neighbours[lastPathNode].forEach(neighbour => {
+            let newPath = pathSoFar.concat(neighbour);
+            if (neighbour === 'end') {
+                paths.push(newPath);
+            } else if (neighbour !== 'start') {
+                let smallCavesInPath = pathSoFar.filter(node => /[a-z]/.test(node));
+                let smallCaveVisitedTwice = (new Set(smallCavesInPath)).size !== smallCavesInPath.length;
+
+                if (/[A-Z]/.test(neighbour) || (!smallCaveVisitedTwice || !pathSoFar.includes(neighbour)) ) {
+                    lengthenPath(newPath);
+                }
+            }
+        })
+    }
+
+    lengthenPath(['start']);
+
+    return paths.length;
+}
+
+strictEqual(partTwo(example1), 36);
+strictEqual(partTwo(example2), 103);
+strictEqual(partTwo(example3), 3509);
+console.log('partTwo', partTwo(input));
