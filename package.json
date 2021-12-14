@@ -7,6 +7,6 @@
   "author": "Faragó Dávid",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.24.0"
+    "assert": "^2.0.0"
   }
 }
